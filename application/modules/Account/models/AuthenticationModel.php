@@ -1,9 +1,8 @@
 <?php
 
-use chriskacerguis\RestServer\RestController;
+  use chriskacerguis\RestServer\RestController;
 
 defined('BASEPATH') or exit('Direct access path is not allowed');
-
 
 
 class AuthenticationModel extends MainModel
@@ -15,8 +14,6 @@ class AuthenticationModel extends MainModel
         $this->load->library('logger');
         $this->load->library("File");
     }
-
-
 
     public function change_password($post)
     {

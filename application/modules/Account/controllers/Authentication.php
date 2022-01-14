@@ -27,6 +27,8 @@ public $commerce_public_url="http://localhost/EcommercePublicAPI";
 
     public function check_pin_post()
     {
+
+
         $result = $this->AuthenticationModel->check_pin($this->post());
 
         if ($result['status']) {
@@ -36,7 +38,10 @@ public $commerce_public_url="http://localhost/EcommercePublicAPI";
 
             $response = $client->request('POST', $this->commerce_public_url."/Account/Authentication/generate_token", [
                 'body' => json_encode($data),
-                'timeout' => 30.0, // set higher if timeout still happens
+                'timeout' => 30.0, 
+                
+                // set higher if timeout still happens
+                
                 'headers'  => ['content-type' => 'application/json', 'Accept' => 'application/json'],
 
             ]);
@@ -78,6 +83,8 @@ public $commerce_public_url="http://localhost/EcommercePublicAPI";
 
     public function recover_password_post()
     {
+        parent::__construct(true);
+
         $result = $this->AuthenticationModel->recover_password($this->post());
         $this->api_response($result, 200);
     }

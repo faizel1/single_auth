@@ -16,9 +16,7 @@ class API extends RestController {
 		 parent::__construct();
 
 		$this->load->library("logger");
-
-
-
+		
 		if ($Auth) {
 			$this->validate_user();
 		}
@@ -33,7 +31,6 @@ class API extends RestController {
 	{
 		$this->response($result, $status);
 	}
-
 
 
 	// check if the email or phone_number or plate_number is already exist in the database or not
@@ -82,10 +79,8 @@ class API extends RestController {
 
 
 		$token_info = $this->jwtObject->DecodeToken($received_Token['authorization']);
-		$user_info = $ci->session->userdata("user_id");
 
-
-		if ((!isset($user_info)) || ($token_info->subject->id != $user_info)) {
+		if (!$token_info) {
 			$this->response(["status"=>false,"message"=>"you are not authenticated"], 200);
 		}
 	}
