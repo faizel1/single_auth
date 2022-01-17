@@ -11,13 +11,13 @@ class Lookup extends API
         $this->load->model("LookupModel");
     }
 
-    public function index_get($limit, $project_type)
+    public function index_get( $project_type,$limit)
     {
         $result = $this->LookupModel->List($limit, $project_type);
         $this->api_response($result, $result["statusCode"]);
     }
 
-    public function detail_get($id, $project_type)
+    public function detail_get( $project_type,$id)
     {
         $result = $this->LookupModel->Detail("tbl_lookup", $id, $project_type);
         $this->api_response($result, $result["statusCode"]);

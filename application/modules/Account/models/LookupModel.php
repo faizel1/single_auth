@@ -8,8 +8,7 @@ class LookupModel extends MainModel
 
     public function List($limit, $project_type)
     {
-        $select =
-            "lok_1.id,lok_1.value,ifnull(lok_2.value,'no parent') parent,cat.text category";
+        $select ="lok_1.id,lok_1.value,ifnull(lok_2.value,'no parent') parent,cat.text category";
 
         $result = $this->db
             ->select($select)
@@ -20,7 +19,8 @@ class LookupModel extends MainModel
                 "lok_1.lookup_type = cat.value",
                 "left"
             )
-            // ->where("lok_1.project_type",$project_type)
+            ->where("lok_1.project_type",$project_type)
+            // ->where("lok_2.project_type",$project_type)
             ->limit($limit)
             ->get()
             ->result();
@@ -61,7 +61,7 @@ class LookupModel extends MainModel
 					) chi",
                 "par.id = chi.parent_id"
             )
-            ->where("par.project_type",$post['project_type'])
+            // ->where("par.project_type",$post['project_type'])
 
             ->group_by("par.id,value")
             ->get()

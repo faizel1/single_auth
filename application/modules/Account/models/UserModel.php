@@ -60,6 +60,7 @@ class UserModel extends MainModel
     public function user_detail($user_id)
     {
 
+        // $this->load->database()
         $data = new stdClass();
 
         $data->profile = $this->db->select("acc.id,acc.phone_number,acc.email,interested_area,acc.full_name")
