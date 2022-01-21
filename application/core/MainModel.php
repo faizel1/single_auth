@@ -44,6 +44,8 @@ class MainModel extends CI_Model
 			} else {
 				$_POST["create"] = false;
 				$this->db->update($table, $data, ["id" => $data["id"]]);
+				$id =$data["id"];
+
 			}
 
 			isset($_POST["multi_data"])
