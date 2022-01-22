@@ -4,6 +4,10 @@ use chriskacerguis\RestServer\RestController;
 
 class LookupModel extends MainModel
 {
+	public function Saves($post)
+	{
+		return $this->Single_Save("tbl_lookup", $post);
+	}
 
 
     public function List($limit, $project_type)
