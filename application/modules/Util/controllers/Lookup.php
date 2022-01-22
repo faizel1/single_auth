@@ -24,9 +24,9 @@ class Lookup extends API
     }
 
 
-    public function load_lookup_key_get($project_type)
+    public function load_lookup_key_get()
     {
-        $result = $this->LookupModel->load_category($project_type);
+        $result = $this->LookupModel->load_category();
         $this->api_response($result, $result["statusCode"]);
     }
 
@@ -42,7 +42,7 @@ class Lookup extends API
         $this->api_response($result, $result["statusCode"]);
     }
 
-    //filter data by searchin,filtering,sorting & paging ...
+    //filter data by searching,filtering,sorting & paging ...
     public function search_post()
     {
         $post = $this->post();

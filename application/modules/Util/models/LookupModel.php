@@ -33,11 +33,10 @@ class LookupModel extends MainModel
         ];
     }
 
-    public function load_category($project_type)
+    public function load_category()
     {
         $result = $this->db
             ->select("value,text,parent_type")
-            ->where("project_type",$project_type)
             ->get("tbl_lookup_category")
             ->result();
 
