@@ -9,7 +9,8 @@ use GuzzleHttp\Client;
 
 class Authentication extends API
 {
-public $commerce_public_url="http://localhost/EcommercePublicAPI";
+    public $commerce_public_url = "http://localhost/EcommercePublicAPI";
+    public $delivery_public_url = "http://localhost/delivery_driver_api_v_1.php";
 
 
     public function __construct()
@@ -28,20 +29,16 @@ public $commerce_public_url="http://localhost/EcommercePublicAPI";
     public function check_pin_post()
     {
 
-
         $result = $this->AuthenticationModel->check_pin($this->post());
 
         if ($result['status']) {
-            $data = array( 'id' => $result['message']->id);
+            $data = array('id' => $result['message']->id);
 
-            $client = new Client(['base_uri' => $this->commerce_public_url ,]);
+            $client = new Client(['base_uri' => $this->commerce_public_url,]);
 
-            $response = $client->request('POST', $this->commerce_public_url."/Account/Authentication/generate_token", [
+            $response = $client->request('POST', $this->commerce_public_url . "/Account/Authentication/generate_token", [
                 'body' => json_encode($data),
-                'timeout' => 30.0, 
-                
-                // set higher if timeout still happens
-                
+                'timeout' => 30.0,
                 'headers'  => ['content-type' => 'application/json', 'Accept' => 'application/json'],
 
             ]);
@@ -60,23 +57,12 @@ public $commerce_public_url="http://localhost/EcommercePublicAPI";
 
     public function login_post()
     {
+        $user_info = $this->session->userdata("user_id");
+        $this->session->set_userdata('some_key', 'some_value');
+        $fdgfdg = $this->session->userdata('some_key'); // you are retrieving from $_SESSION array now, stored on Redis server :)
 
         $result = $this->AuthenticationModel->login($this->post());
 
-        if ($result['status']) {
-            $data = array( 'id' => $result['message']->id);
-
-            $client = new Client(['base_uri' => $this->commerce_public_url ,]);
-
-            $response = $client->request('POST', $this->commerce_public_url."/Account/Authentication/generate_token", [
-                'body' => json_encode($data),
-                'timeout' => 30.0, // set higher if timeout still happens
-                'headers'  => ['content-type' => 'application/json', 'Accept' => 'application/json'],
-
-            ]);
-
-            $result['message']->token = json_decode($response->getBody()->read(1024));
-        }
 
         $this->api_response($result, 200);
     }
@@ -89,9 +75,12 @@ public $commerce_public_url="http://localhost/EcommercePublicAPI";
         $this->api_response($result, 200);
     }
 
-    public function logout_get()
+    public function logout_post()
     {
-        $result = $this->session->unset_userdata("user_info");
+        $result = $this->session->unset_userdata("user_id");
         $this->api_response($result, 200);
     }
+
+
+
 }

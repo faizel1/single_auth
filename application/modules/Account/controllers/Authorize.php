@@ -22,4 +22,15 @@ class Authorize extends API
          $this->api_response(($result), 200);
     }
 
+
+    public function check_token_post()
+    {
+        $this->objOfJwt = new Jwt_Autorization();
+
+        $token = $this->post();
+		$result = $this->objOfJwt->DecodeToken($token[0]);
+
+        $this->api_response($result, 200);
+    }
+
 }

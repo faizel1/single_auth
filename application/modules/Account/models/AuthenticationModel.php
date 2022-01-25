@@ -62,7 +62,10 @@ class AuthenticationModel extends MainModel
                 $message = ['status' => true, 'message' => $result];
             }
         } elseif (isset($post['phone_number'])) {
-            $result = $this->db->select('full_name,id')->from('tbl_account')->where('phone_number', $post['phone_number'])->get()->row();
+            $result = $this->db->select('full_name,id')
+            ->from('tbl_account')
+            ->where('phone_number', $post['phone_number'])
+            ->get()->row();
             if ($result) {
                 $message = ['status' => true, 'message' => $result];
             }
@@ -79,15 +82,19 @@ class AuthenticationModel extends MainModel
 
     public function login($post)
     {
-     
+        $this->objOfJwt = new Jwt_Autorization();
 
-        $result = $this->db->select("id,password,full_name,phone_number,project_type")->from('tbl_account ')->where("email", $post['email'])->get()->row();
 
-        if (!($result && (password_verify($post['password'], $result->password)) && $result->project_type==$post['project_type']   )) {
+        $result = $this->db->select("id ,password,full_name,phone_number")->from('tbl_account ')->where("email", $post['email'])->get()->row();
+
+        if (!($result && (password_verify($post['password'], $result->password))    )) {
             return ['status' => false, 'message' => 'Wrong Email or Password'];
         }
 
-        unset($result->password,$result->project_type);
+        unset($result->password);
+
+        $result->token = $this->objOfJwt->GenerateToken($result->id);
+        $this->session->set_userdata("user_id", $result->id);
 
 
         return ['status' => true, 'message' => $result];
