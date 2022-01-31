@@ -36,7 +36,7 @@ class Lookup extends API
         $this->api_response($result, $result["statusCode"]);
     }
 
-    public function load_lookup_post()
+    public function load_parent_post()
     {
         $result = $this->LookupModel->load_parent($this->post());
         $this->api_response($result, $result["statusCode"]);

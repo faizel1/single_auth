@@ -66,7 +66,7 @@ class LookupModel extends MainModel
             )
             // ->where("par.project_type",$post['project_type'])
 
-            ->group_by("par.id,value")
+            ->group_by("par.id,value ")
             ->get()
             ->result();
 

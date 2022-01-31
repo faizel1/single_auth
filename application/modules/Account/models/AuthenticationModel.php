@@ -1,6 +1,6 @@
 <?php
 
-  use chriskacerguis\RestServer\RestController;
+use chriskacerguis\RestServer\RestController;
 
 defined('BASEPATH') or exit('Direct access path is not allowed');
 
@@ -36,10 +36,10 @@ class AuthenticationModel extends MainModel
         $this->objOfJwt = new Jwt_Autorization();
 
         $data = $this->db->select('id')
-                        ->from('tbl_account')
-                        ->where('email', $post['email'])
-                        ->where('reset_pin', $post['pin'])
-                        ->get()->row();
+            ->from('tbl_account')
+            ->where('email', $post['email'])
+            ->where('reset_pin', $post['pin'])
+            ->get()->row();
 
         if ($data) {
             return ['status' => true, 'message' => $data];
@@ -55,17 +55,17 @@ class AuthenticationModel extends MainModel
 
         if (isset($post['email'])) {
             $result = $this->db->select('full_name,id,phone_number,email')
-                                ->from('tbl_account')
-                                ->where('email', $post['email'])
-                                ->get()->row();
+                ->from('tbl_account')
+                ->where('email', $post['email'])
+                ->get()->row();
             if ($result) {
                 $message = ['status' => true, 'message' => $result];
             }
         } elseif (isset($post['phone_number'])) {
             $result = $this->db->select('full_name,id')
-            ->from('tbl_account')
-            ->where('phone_number', $post['phone_number'])
-            ->get()->row();
+                ->from('tbl_account')
+                ->where('phone_number', $post['phone_number'])
+                ->get()->row();
             if ($result) {
                 $message = ['status' => true, 'message' => $result];
             }
@@ -85,9 +85,13 @@ class AuthenticationModel extends MainModel
         $this->objOfJwt = new Jwt_Autorization();
 
 
-        $result = $this->db->select("id ,password,full_name,phone_number")->from('tbl_account ')->where("email", $post['email'])->get()->row();
+        $result = $this->db->select("acc.id ,password,full_name,phone_number,role")
+            ->from('tbl_account acc ')
+            ->join("tbl_group as gr","gr.id=acc.group_id")
+            ->where("email", $post['email'])
+            ->get()->row();
 
-        if (!($result && (password_verify($post['password'], $result->password))    )) {
+        if (!($result && (password_verify($post['password'], $result->password)))) {
             return ['status' => false, 'message' => 'Wrong Email or Password'];
         }
 
