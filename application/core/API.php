@@ -69,20 +69,18 @@ class API extends RestController {
 		$this->jwtObject = new Jwt_Autorization();
 		$received_Token = $this->input->request_headers();
 
-
-		$ci = &get_instance();
-
-
 		if (!isset($received_Token['authorization'])) {
 			$this->response("you are not authorized", 200);
 		}
 
 
 		$token_info = $this->jwtObject->DecodeToken($received_Token['authorization']);
+		$user_info = $this->session->userdata("user_id");
 
-		if (!$token_info) {
+		if ((!isset($user_info)) || ($token_info->subject->id != $user_info)) {
 			$this->response(["status"=>false,"message"=>"you are not authenticated"], 200);
 		}
+
 	}
 
 
