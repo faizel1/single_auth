@@ -58,9 +58,6 @@ class Authentication extends API
     public function login_post()
     {
         $user_info = $this->session->userdata("user_id");
-        $this->session->set_userdata('some_key', 'some_value');
-        $fdgfdg = $this->session->userdata('some_key'); // you are retrieving from $_SESSION array now, stored on Redis server :)
-
         $result = $this->AuthenticationModel->login($this->post());
 
 

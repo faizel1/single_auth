@@ -87,7 +87,7 @@ class AuthenticationModel extends MainModel
 
         $result = $this->db->select("acc.id ,password,full_name,phone_number,role")
             ->from('tbl_account acc ')
-            ->join("tbl_group as gr","gr.id=acc.group_id")
+            ->join("tbl_group as gr", "gr.id=acc.group_id")
             ->where("email", $post['email'])
             ->get()->row();
 
@@ -96,7 +96,8 @@ class AuthenticationModel extends MainModel
         }
 
         unset($result->password);
-
+       
+        $result->role = json_decode($result->role)??null;
         $result->token = $this->objOfJwt->GenerateToken($result->id);
         $this->session->set_userdata("user_id", $result->id);
 
