@@ -27,10 +27,19 @@ class Authorize extends API
     {
         $this->objOfJwt = new Jwt_Autorization();
 
-        $token = $this->post();
-		$result = $this->objOfJwt->DecodeToken($token[0]);
+        $token = $this->post(0);
+		$result = $this->objOfJwt->DecodeToken($token);
+		$user_info = $this->post(1);
 
-        $this->api_response($result, 200);
+
+		if ((!isset($user_info)) || !($result)||($result->subject->id != $user_info)) {
+			$this->response(false, 200);
+		}
+        $this->api_response(true, 200);
+
+
+
+
     }
 
 }
