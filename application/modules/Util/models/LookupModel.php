@@ -4,15 +4,15 @@ use chriskacerguis\RestServer\RestController;
 
 class LookupModel extends MainModel
 {
-	public function Saves($post)
-	{
-		return $this->Single_Save("tbl_lookup", $post);
-	}
+    public function Saves($post)
+    {
+        return $this->Single_Save("tbl_lookup", $post);
+    }
 
 
     public function List($limit, $project_type)
     {
-        $select ="lok_1.id,lok_1.value,ifnull(lok_2.value,'no parent') parent,cat.text category";
+        $select = "lok_1.id,lok_1.value,ifnull(lok_2.value,'no parent') parent,cat.text category";
 
         $result = $this->db
             ->select($select)
@@ -23,7 +23,7 @@ class LookupModel extends MainModel
                 "lok_1.lookup_type = cat.value",
                 "left"
             )
-            ->where("lok_1.project_type",$project_type)
+            ->where("lok_1.project_type", $project_type)
             // ->where("lok_2.project_type",$project_type)
             ->limit($limit)
             ->get()
@@ -54,21 +54,16 @@ class LookupModel extends MainModel
 
     public function load_parent($post)
     {
-        $result = $this->db
-            ->select("id value, value text")
-            ->from("tbl_lookup par")
-            ->join(
-                "(	select parent_id 
-					from tbl_lookup 
-					where lookup_type = '$post[lookup_type]'
-					) chi",
-                "par.id = chi.parent_id"
-            )
-            // ->where("par.project_type",$post['project_type'])
+        if (isset($post['project_type'])) {
+            $this->db->where("par.project_type", $post['project_type']);
+        }
 
-            ->group_by("par.id,value ")
-            ->get()
-            ->result();
+        $result = $this->db
+            ->select("par.id value, par.value text")
+            ->join("tbl_lookup_category as cat", "cat.value='$post[lookup_type]' and lookup_type=cat.parent_type")
+            ->from("tbl_lookup par")
+            ->group_by("par.id ")
+            ->get()->result();
 
         return [
             "data" => $result,
