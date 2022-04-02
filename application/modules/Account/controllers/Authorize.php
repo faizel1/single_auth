@@ -42,4 +42,12 @@ class Authorize extends API
 
     }
 
+public function update_firebase_token_post(){
+
+    $post = $this->post();
+    $result =  $this->AuthorizationModel->update_firebase_token($post);
+     $this->api_response(($result), 200);
+}
+
+
 }
