@@ -28,8 +28,18 @@ class UtilModel extends MainModel
     public function lookup($post)
     {
 
-        return $this->db->select('*')->from('tbl_lookup')->where($post)->order_by("value")->get()->result();
+        return $this->db->select('*')
+            ->from('tbl_lookup')
+            ->where($post)
+            ->order_by("value")
+            ->get()->result();
     }
-
-  
+    public function language($language)
+    {
+        return $this->db->select("la.value,lak.key")
+            ->from("tbl_language la")
+            ->join("tbl_language_key lak","lak.id=la.key_id")
+            ->where("language", $language)
+            ->get()->result();
+    }
 }

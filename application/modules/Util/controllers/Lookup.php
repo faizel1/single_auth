@@ -57,7 +57,7 @@ class Lookup extends API
 
         $this->process->pre_process_query($post);
 
-        $result = $this->LookupModel->List($post["limit"]);
+        $result = $this->LookupModel->List($post["limit"], $post["project_type"]);
         $this->api_response($result, $result["statusCode"]);
     }
 }

@@ -42,8 +42,10 @@ class Util extends API
         $this->api_response($result);
     }
 
+    public function language_get($language)
+    {
+        $result = $this->UtilModel->language($language);
+        $this->api_response($result);
 
-
-
-
+    }
 }
