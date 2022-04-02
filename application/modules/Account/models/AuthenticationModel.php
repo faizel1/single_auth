@@ -49,6 +49,43 @@ class AuthenticationModel extends MainModel
     }
 
 
+
+
+
+
+    public function login($post)
+    {
+        $this->objOfJwt = new Jwt_Autorization();
+
+
+        $result = $this->db->select("acc.id ,password,firebase_token,status,full_name,phone_number,role,gr.id as group_id")
+            ->from('tbl_account acc ')
+            ->join("tbl_group as gr", "gr.id=acc.group_id","left")
+            ->where("email", $post['email'])
+            ->get()->row();
+
+        if (!($result && (password_verify($post['password'], $result->password)))) {
+            return ['status' => false, 'message' => 'Wrong Email or Password'];
+        }
+
+        unset($result->password);
+
+        $result->role = json_decode($result->role) ?? null;
+        $result->token = $this->objOfJwt->GenerateToken($result->id);
+      $kirra=  $this->session->set_userdata("user_id", $result->id);
+      $user_info = $this->session->userdata("user_id");
+
+
+
+        $subscription = $this->db->select("ecommerce_supplier")
+            ->from("tbl_subscription")
+            ->where("account_id", $result->id)
+            ->get()->row();
+            if(isset($subscription))
+        $result->is_supplier = $subscription->ecommerce_supplier=="active";
+        return ['status' => true, 'message' => $result];
+    }
+
     public function find_account($post)
     {
         $message = ['status' => false, 'message' => "your account could not be found"];
@@ -71,44 +108,23 @@ class AuthenticationModel extends MainModel
             }
         }
 
-        if ($message['status']) {
-            $message = $this->send_pin($post);
-        }
+        // if ($message['status']) {
+        //     $message = $this->send_pin($post);
+        // }
 
         return $message;
     }
 
 
-
-    public function login($post)
-    {
-        $this->objOfJwt = new Jwt_Autorization();
-
-
-        $result = $this->db->select("acc.id ,password,full_name,phone_number,role")
-            ->from('tbl_account acc ')
-            ->join("tbl_group as gr", "gr.id=acc.group_id")
-            ->where("email", $post['email'])
-            ->get()->row();
-
-        if (!($result && (password_verify($post['password'], $result->password)))) {
-            return ['status' => false, 'message' => 'Wrong Email or Password'];
-        }
-
-        unset($result->password);
-       
-        $result->role = json_decode($result->role)??null;
-        $result->token = $this->objOfJwt->GenerateToken($result->id);
-        $this->session->set_userdata("user_id", $result->id);
-
-
-        return ['status' => true, 'message' => $result];
-    }
-
-
     public function send_pin($post)
     {
-        return ['status' => true, 'message' => 1234];
+        if (isset($post['email'])) {
+            return ['status' => true, 'message' => 1234];
+        }
+        if (isset($post['sms'])) {
+            return ['status' => true, 'message' => 1234];
+        }
+
 
 
         $this->load->helper('email');

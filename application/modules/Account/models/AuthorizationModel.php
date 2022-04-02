@@ -18,14 +18,22 @@ class AuthorizationModel extends MainModel
         $result = $this->role($post);
 
         if (isset($result)) {
-
             foreach ($result as $value) {
-                if ($value->page == $post['page']) {
-                    return $value->{$post['action']};
+                if (strcasecmp($value->page,$post['page'])==0) {
+                     if($value->{$post['action']}){
+                        $role=$value->{$post['action']};
+                        break;
+                    };
                 }
             }
         }
-        return $role;
+
+        if (!$role)
+            $message =    ["status" => false, "message" => "Your are not Authorized"];
+        else
+            $message = ["status" => true, "message" => "success"];
+
+        return $message;
     }
 
 
@@ -42,4 +50,13 @@ class AuthorizationModel extends MainModel
         else
             return null;
     }
+
+    public function update_firebase_token($post)
+    {
+        $result = $this->db->update("tbl_account", ["firebase_token"=> $post['firebase_token']],["id"=>$post['id']]);
+        return $result;
+
+    } 
+
+    
 }
