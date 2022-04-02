@@ -28,7 +28,6 @@ class Authentication extends API
 
     public function check_pin_post()
     {
-
         $result = $this->AuthenticationModel->check_pin($this->post());
 
         if ($result['status']) {
@@ -55,6 +54,13 @@ class Authentication extends API
         $this->api_response($result, 200);
     }
 
+    public function send_post()
+    {
+        $result = $this->AuthenticationModel->send_pin($this->post());
+        $this->api_response($result, 200);
+    }
+
+    
     public function login_post()
     {
         $user_info = $this->session->userdata("user_id");
